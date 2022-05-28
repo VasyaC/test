@@ -13,6 +13,8 @@ class FinalWin(QWidget):
         ''' окно, в котором проводится опрос '''
         super().__init__()
 
+        #получаем данные об эксперименте
+
         # создаём и настраиваем графические элелементы:
         self.initUI()
 
@@ -23,7 +25,9 @@ class FinalWin(QWidget):
         self.set_appear()
         
         # старт:
-        self.show()   
+        self.show()
+
+   
 
     def initUI(self):
         ''' создает графические элементы '''

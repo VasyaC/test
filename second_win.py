@@ -9,18 +9,6 @@ from PyQt5.QtWidgets import (
 from instr import *
 from final_win import *
 
-class Person():
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
-
-class Experiment():
-    def __init__(self, person, test1, test2, test3):
-        self.person = person
-        self.test1 = test1
-        self.test2 = test2
-        self.test3 = test3
-
 class TestWin(QWidget):
     def __init__(self):
         ''' окно, в котором проводится опрос '''
@@ -42,14 +30,6 @@ class TestWin(QWidget):
         self.tw = TestWin()
         self.hide()
 
-    def connects(self):
-        self.btn_next.clicked.connect(self.next_click)
-
-    ''' устанавливает, как будет выглядеть окно (надпись, размер, место) '''
-    def set_appear(self):
-        self.setWindowTitle(txt_title)
-        self.resize(win_width, win_height)
-        self.move(win_x, win_y)
     def initUI(self):
         ''' создает графические элементы '''
         #self.questionnary = AllQuestions()
@@ -115,10 +95,65 @@ class TestWin(QWidget):
         self.hide()
         self.fw = FinalWin()
 
-   
+    def timer_test1(self):
+        global time
+        time = QTime(0, 0, 15)
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.timer1Event)
+        self.timer.start(1000)
+
+    def timer1Event(self):
+        global time
+        time = time.addSecs(-1)
+        self.text_timer.setText(time.toString("hh:mm:ss"))
+        self.text_timer.setFont(QFont("Times", 36, QFont.Bold))
+        self.text_timer.setStyleSheet("color: rgb(0,0,0)")
+        if time.toString("hh:mm:ss") == "00:00:00":
+            self.timer.stop()
+
+    def timer2Event(self):
+        global time
+        time = time.addSecs(-1)
+        self.text_timer.setText(time.toString("hh:mm:ss")[6:8])
+        self.text_timer.setStyleSheet("color: rgb(0,0,0)")
+        self.text_timer.setFont(QFont("Times", 36, QFont.Bold))
+        if time.toString("hh:mm:ss") == "00:00:00":
+            self.timer.stop()
+
+    def timer_bob(self):
+        global time
+        time = QTime(0, 0, 30)
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.timer2Event)
+        #одно приседание в 1.5 секунды
+        self.timer.start(1500)
+
+    def timer3Event(self):
+        global time
+        time = time.addSecs(-1)
+        self.text_timer.setText(time.toString("hh:mm:ss"))
+        if int(time.toString("hh:mm:ss")[6:8]) >= 45:
+            self.text_timer.setStyleSheet("color: rgb(0,255,0)")
+        elif int(time.toString("hh:mm:ss")[6:8]) <= 15:
+            self.text_timer.setStyleSheet("color: rgb(0,255,0)")
+        else:
+            self.text_timer.setStyleSheet("color: rgb(0,0,0)")
+        self.text_timer.setFont(QFont("Times", 36, QFont.Bold))
+        if time.toString("hh:mm:ss") == "00:00:00":
+            self.timer.stop()
+
+    def timer_final(self):
+        global time
+        time = QTime(0, 1, 0)
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.timer3Event)
+        self.timer.start(1000)
 
     def connects(self):
         self.btn_next.clicked.connect(self.next_click)
+        self.btn_test1.clicked.connect(self.timer_test1)
+        self.btn_test2.clicked.connect(self.timer_bob)
+        self.btn_test3.clicked.connect(self.timer_final)
 
     ''' устанавливает, как будет выглядеть окно (надпись, размер, место) '''
     def set_appear(self):
